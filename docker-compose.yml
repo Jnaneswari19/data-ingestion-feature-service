@@ -1,1 +1,23 @@
-ECHO is on.
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: data_ingestion_service
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: data_ingestion_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ingestion
+    ports:
+      - "5432:5432"
+
