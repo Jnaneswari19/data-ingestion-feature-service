@@ -3,6 +3,7 @@ from typing import List
 from src.schemas import RawDataItem, ProcessedDataItem
 from datetime import datetime
 
+
 def transform_data(raw_data: List[RawDataItem]) -> List[ProcessedDataItem]:
     # Convert list of RawDataItem → DataFrame
     df = pd.DataFrame([item.dict() for item in raw_data])
@@ -13,8 +14,12 @@ def transform_data(raw_data: List[RawDataItem]) -> List[ProcessedDataItem]:
 
     # Handle missing customer_id → "UNKNOWN", normalize floats
     df["customer_id"] = df["customer_id"].apply(
-    lambda x: "UNKNOWN" if pd.isna(x) else str(int(x)) if isinstance(x, float) and x.is_integer() else str(x)
-)
+        lambda x: (
+            "UNKNOWN"
+            if pd.isna(x)
+            else str(int(x)) if isinstance(x, float) and x.is_integer() else str(x)
+        )
+    )
 
     # 3. Calculate total_price = quantity * price
     df["total_price"] = df["quantity"] * df["price"]
@@ -47,4 +52,3 @@ def transform_data(raw_data: List[RawDataItem]) -> List[ProcessedDataItem]:
         processed_items.append(item)
 
     return processed_items
-

@@ -1,13 +1,11 @@
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from src.config import SessionLocal
-from src.schemas import RawDataItem, ProcessedDataItem
-from src.crud import insert_raw, insert_processed, get_all_raw, get_all_processed
+from .config import SessionLocal
+from .schemas import RawDataCreate, ProcessedDataCreate
+from .crud import create_raw, create_processed, get_all_raw, get_all_processed
 
 router = APIRouter()
 
-# Dependency to get DB session
 def get_db():
     db = SessionLocal()
     try:
@@ -16,17 +14,17 @@ def get_db():
         db.close()
 
 @router.post("/raw")
-def create_raw(raw_item: RawDataItem, db: Session = Depends(get_db)):
-    return insert_raw(raw_item)
+def post_raw(raw: RawDataCreate, db: Session = Depends(get_db)):
+    return create_raw(db, raw)
 
 @router.get("/raw")
-def list_raw(db: Session = Depends(get_db)):
-    return get_all_raw()
+def get_raw(db: Session = Depends(get_db)):
+    return get_all_raw(db)
 
 @router.post("/processed")
-def create_processed(processed_item: ProcessedDataItem, db: Session = Depends(get_db)):
-    return insert_processed(processed_item)
+def post_processed(processed: ProcessedDataCreate, db: Session = Depends(get_db)):
+    return create_processed(db, processed)
 
 @router.get("/processed")
-def list_processed(db: Session = Depends(get_db)):
-    return get_all_processed()
+def get_processed(db: Session = Depends(get_db)):
+    return get_all_processed(db)

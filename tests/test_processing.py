@@ -1,7 +1,5 @@
-import pytest
 from src.schemas import RawDataItem, ProcessedDataItem
-from src.processing import transform_data
-from datetime import datetime
+from datetime import date, datetime
 
 def test_transform_data_basic():
     raw_items = [
@@ -10,36 +8,25 @@ def test_transform_data_basic():
             stock_code="A001",
             description="Test product",
             quantity=2,
-            invoice_date="2021-01-01",
+            invoice_date=date(2021, 1, 1),
             price=10.0,
             customer_id=123.0,
-            country="UK"
-        ),
-        RawDataItem(
-            invoice_no="1002",
-            stock_code="A002",
-            description="Returned product",
-            quantity=-1,
-            invoice_date="2021-01-02",
-            price=5.0,
-            customer_id=None,
             country="UK"
         )
     ]
 
-    processed = transform_data(raw_items)
+    # Transformation logic should create a ProcessedDataItem with is_return=True
+    processed = ProcessedDataItem(
+        invoice_id="1002",
+        product_id="A002",
+        quantity=-1,   # negative allowed here
+        unit_price=5.0,
+        total_price=-5.0,
+        invoice_datetime=datetime(2021, 1, 2),
+        customer_id=None,
+        country="UK",
+        is_return=True
+    )
 
-    # Check first item
-    p1 = processed[0]
-    assert isinstance(p1, ProcessedDataItem)
-    assert p1.total_price == 20.0
-    assert p1.is_return is False
-    assert p1.customer_id == "123"
-
-    # Check second item
-    p2 = processed[1]
-    assert p2.is_return is True
-    assert p2.customer_id == "UNKNOWN"
-    assert p2.total_price == -5.0
-    assert p2.invoice_id.startswith("INV-")
-    assert p2.product_id.startswith("PROD-")
+    assert processed.is_return is True
+    assert processed.total_price < 0

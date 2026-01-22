@@ -1,28 +1,41 @@
-from pydantic import BaseModel, Field
 from typing import Optional
-from datetime import datetime
+from pydantic import BaseModel, Field
+from datetime import date, datetime
 
-# Raw incoming data schema
-class RawDataItem(BaseModel):
+# --- Raw Data Schemas ---
+
+class RawDataCreate(BaseModel):
     invoice_no: str
     stock_code: str
-    description: Optional[str]
-    quantity: int  # allow negative for returns
-    invoice_date: str
-    price: float = Field(..., gt=0.0)
-    customer_id: Optional[float]
+    description: str
+    quantity: int = Field(..., gt=0)   # must be > 0
+    invoice_date: date
+    price: float = Field(..., gt=0)    # must be > 0
+    customer_id: float
     country: str
 
+class RawDataItem(RawDataCreate):
+    id: Optional[int] = None
 
-# Processed data schema after transformations
-class ProcessedDataItem(BaseModel):
+    class Config:
+        orm_mode = True
+
+
+# --- Processed Data Schemas ---
+
+class ProcessedDataCreate(BaseModel):
     invoice_id: str
     product_id: str
     quantity: int   # allow negative for returns
-    unit_price: float = Field(..., gt=0.0)
-    total_price: float   # allow negative for returns
+    unit_price: float
+    total_price: float
     invoice_datetime: datetime
-    customer_id: Optional[str]
+    customer_id: Optional[str] = None  # allow None
     country: str
-    is_return: bool = Field(False, description="Flag if transaction is a return")
+    is_return: bool
 
+class ProcessedDataItem(ProcessedDataCreate):
+    id: Optional[int] = None
+
+    class Config:
+        orm_mode = True
