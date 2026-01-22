@@ -225,6 +225,75 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  
 THE SOFTWARE.
 
+## 🌐 Deployment & Monitoring
+
+### Deploy to Heroku
+```bash
+heroku create data-ingestion-feature-service
+heroku config:set DATABASE_URL=postgresql://postgres:postgres@db:5432/ingestion
+git push heroku main
+heroku open
+
+
+
+## ✅  Verification
+
+### Health Check
+```bash
+curl https://data-ingestion-feature-service.onrender.com/health
+```
+Response:
+```json
+{"status":"ok"}
+```
+
+### Insert Record
+```bash
+curl -X POST https://data-ingestion-feature-service.onrender.com/raw \
+  -H "Content-Type: application/json" \
+  -d "{\"invoice_no\":\"9001\",\"stock_code\":\"X001\",\"description\":\"Phase9 test\",\"quantity\":1,\"invoice_date\":\"2026-01-22\",\"price\":99.0,\"customer_id\":123,\"country\":\"IN\"}"
+```
+
+### Retrieve Records
+```bash
+curl https://data-ingestion-feature-service.onrender.com/raw
+```
+Response:
+```json
+[
+  {
+    "invoice_no":"9001",
+    "stock_code":"X001",
+    "description":"Phase9 test",
+    "quantity":1,
+    "invoice_date":"2026-01-22",
+    "price":99.0,
+    "customer_id":123.0,
+    "country":"IN",
+    "id":1
+  },
+  {
+    "invoice_no":"9001",
+    "stock_code":"X001",
+    "description":"Phase9 test",
+    "quantity":1,
+    "invoice_date":"2026-01-22",
+    "price":99.0,
+    "customer_id":123.0,
+    "country":"IN",
+    "id":2
+  }
+]
+```
+
+### Proof
+- ✅ Live URL: [Swagger UI](https://data-ingestion-feature-service.onrender.com/docs)  
+- ✅ Logs in Render dashboard show API requests.  
+- ✅ Database persistence confirmed.  
+```
+
+
+
 ## 👩‍💻 Author
 **Jnaneswari**  
 Backend Engineer | Focused on reproducible, evaluator‑friendly projects  
