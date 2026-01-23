@@ -1,8 +1,7 @@
-
-fastapi==0.95.2
-uvicorn==0.22.0
-pydantic==1.10.9
-pandas==2.0.3
-sqlalchemy==2.0.19
-pytest==7.4.0
-psycopg2-binary==2.9.9
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+python-dotenv
+prometheus-fastapi-instrumentator
+gunicorn

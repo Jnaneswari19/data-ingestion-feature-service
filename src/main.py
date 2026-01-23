@@ -1,15 +1,22 @@
 from fastapi import FastAPI
-from src.api import router
-from src.config import Base, engine
-import src.models  # ✅ ensures models are registered
+from fastapi.middleware.cors import CORSMiddleware
+import logging
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
 
-# ✅ Create tables after models are imported
-Base.metadata.create_all(bind=engine)
+logging.basicConfig(level="INFO", format="%(asctime)s - %(levelname)s - %(message)s")
 
-app.include_router(router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # tighten in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+# Register Prometheus metrics
+Instrumentator().instrument(app).expose(app)
 
 @app.get("/health")
 def health_check():

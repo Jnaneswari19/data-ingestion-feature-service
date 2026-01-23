@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: data-ingestion-feature-service
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn -w 4 -k uvicorn.workers.UvicornWorker src.main:app"
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://postgres:postgres@db:5432/ingestion

@@ -292,9 +292,29 @@ Response:
 - ✅ Database persistence confirmed.  
 ```
 
+## 🛠️ CI/CD, Coverage & Monitoring
+
+**CI/CD (GitHub Actions):**
+- Automated tests run on every push/PR to `main`.
+- Coverage uploaded to Codecov; badge reflects latest coverage.
+
+**Coverage Badge:**
+![Coverage](https://img.shields.io/codecov/c/github/Jnaneswari19/data-ingestion-feature-service)
+
+**Metrics:**
+- `/metrics` endpoint exposes Prometheus metrics in production.
+- Optional local stack: `docker-compose up prometheus grafana` → Grafana at `http://localhost:3000` (add Prometheus as a data source pointing to `http://prometheus:9090`).
+
+**Verification:**
+```bash
+# CI status
+# Visit GitHub → Actions → confirm green runs
+
+# Metrics endpoint (Render)
+curl https://data-ingestion-feature-service.onrender.com/metrics | head -n 20
 
 
-## 👩‍💻 Author
+### 👩‍💻 Author
 **Jnaneswari**  
 Backend Engineer | Focused on reproducible, evaluator‑friendly projects  
 GitHub: Jnaneswari19 [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2FJnaneswari19")
