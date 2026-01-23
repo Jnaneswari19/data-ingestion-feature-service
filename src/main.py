@@ -15,7 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register Prometheus metrics at startup
 @app.on_event("startup")
 async def startup():
     Instrumentator().instrument(app).expose(app)
