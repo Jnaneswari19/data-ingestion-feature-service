@@ -1,8 +1,9 @@
 from fastapi.testclient import TestClient
-from src.main import app
+from src.main import app  # ✅ This must point to your actual FastAPI app
 from datetime import datetime
 
 client = TestClient(app)
+
 
 def test_post_and_get_raw():
     payload = {

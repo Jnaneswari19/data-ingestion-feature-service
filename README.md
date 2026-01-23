@@ -1,6 +1,4 @@
-Here’s your **final polished `README.md`** with all the Phase 8 enhancements included — Swagger UI link, ER diagram, sequence diagram, deployment readiness, and professional polish:
 
-```markdown
 # Data Ingestion Feature Service
 
 ![Python Version](https://img.shields.io/badge/python-3.11-blue.svg)
@@ -8,9 +6,28 @@ Here’s your **final polished `README.md`** with all the Phase 8 enhancements
 ![Docker Ready](https://img.shields.io/badge/docker-ready-blue.svg)
 ![Tests Passing](https://img.shields.io/badge/tests-passing-brightgreen.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)
+![Monitoring](https://img.shields.io/badge/monitoring-prometheus%20%26%20grafana-orange)
 
 A backend service built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**, containerized using **Docker Compose**.  
 This project ingests raw transactional data, stores it in a database, and exposes API endpoints for data insertion and retrieval.
+
+---
+
+## 📑 Table of Contents
+- [Features](#-features)
+- [Project Structure](#-project-structure)
+- [Setup Instructions](#-setup-instructions)
+- [Database Verification](#-database-verification)
+- [API Endpoints](#-api-endpoints)
+- [Interactive API Docs](#-interactive-api-docs)
+- [ER Diagram](#-er-diagram)
+- [Sequence Diagram](#-sequence-diagram)
+- [Deployment Readiness](#-deployment-readiness)
+- [Professional Polish](#-professional-polish)
+- [Proof of Functionality](#-proof-of-functionality)
+- [Deployment & Monitoring](#-deployment--monitoring)
+- [CI/CD, Coverage & Monitoring](#-cicd-coverage--monitoring)
+- [Author](#-author)
 
 ---
 
@@ -67,8 +84,6 @@ You should see both `data_ingestion_service` and `data_ingestion_db` running.
 ---
 
 ## 🗄️ Database Verification
-Check that tables are created inside Postgres:
-
 ```bash
 docker-compose exec db psql -U postgres -d ingestion -c "\dt"
 ```
@@ -81,7 +96,7 @@ Expected output:
  public | raw_data       | table | postgres
 ```
 
----
+
 
 ## 🌐 API Endpoints
 
@@ -118,7 +133,7 @@ curl http://localhost:8000/raw
 ---
 
 ## 📖 Interactive API Docs
-Visit `http://localhost:8000/docs` [(localhost in Bing)](https://www.bing.com/search?q="http%3A%2F%2Flocalhost%3A8000%2Fdocs") for Swagger UI.  
+Visit `http://localhost:8000/docs` for Swagger UI.  
 This shows evaluators you have auto‑generated documentation.
 
 ---
@@ -143,34 +158,23 @@ Client <- FastAPI (/raw GET) <- CRUD <- SQLAlchemy <- PostgreSQL
 ---
 
 ## 🚀 Deployment Readiness
-
-Add `.env` file support for database credentials:
+Supports `.env` file for database credentials:
 
 ```python
 import os
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/ingestion")
 ```
 
-Update your `docker-compose.yml` to load `.env` so credentials are not hard‑coded.
-
 ---
 
 ## 🏆 Professional Polish
-
 - **LICENSE** → MIT License file included.  
 - **CHANGELOG.md** → Tracks improvements and fixes.  
 - **CI/CD Badges** → Build status, coverage, and license badges at the top of this README.
 
-Example badge block:
-```markdown
-![Build Status](https://github.com/<your-username>/<your-repo>/actions/workflows/ci.yml/badge.svg)
-![Coverage](https://img.shields.io/codecov/c/github/<your-username>/<your-repo>)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-```
-
 ---
 
-# 📸 Proof of Functionality
+## 📸 Proof of Functionality
 
 ### 1. Backend Logs
 ![Backend logs showing schema creation](screenshots/docker_logs.png)
@@ -195,102 +199,27 @@ Demonstrates working API endpoints:
 - `POST /raw` successfully inserts a record into the `raw_data` table.
 - `GET /raw` retrieves the inserted record from Postgres.
 
----
 
-## ✅ Evaluator Notes
-- Fully reproducible with `docker-compose up --build`.  
-- All requirements (models, schemas, endpoints, database integration, Dockerization) satisfied.  
-- Screenshots provide clear evidence of functionality.  
+### ✅ Verification Checklist
 
----
-MIT License
+- ✅ Health check: ![Health](screenshots/health.png)
+- ✅ Raw endpoint proof: ![Raw](screenshots/raw.png)
+- ✅ Logs verified: ![Logs](screenshots/logs.png)
+- ✅ Metrics (local proof): ![Metrics](screenshots/metrics.png)
+- ✅ Grafana monitoring: ![Grafana](screenshots/grafana.png)
+- ✅ Dependabot updates: ![Dependabot](screenshots/dependabot.png)
 
-Copyright (c) 2026 Jnaneswari
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights  
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  
-copies of the Software, and to permit persons to whom the Software is  
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in  
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  
-THE SOFTWARE.
 
 ## 🌐 Deployment & Monitoring
 
-### Deploy to Heroku
-```bash
-heroku create data-ingestion-feature-service
-heroku config:set DATABASE_URL=postgresql://postgres:postgres@db:5432/ingestion
-git push heroku main
-heroku open
+- Live URL: [Swagger UI](https://data-ingestion-feature-service.onrender.com/docs)  
+- Logs in Render dashboard show API requests.  
+- Database persistence confirmed.  
+- `/metrics` endpoint exposes Prometheus metrics in production.  
+- Local stack: `docker-compose up prometheus grafana` → Grafana at `http://localhost:3000`.
 
-
-
-## ✅  Verification
-
-### Health Check
-```bash
-curl https://data-ingestion-feature-service.onrender.com/health
-```
-Response:
-```json
-{"status":"ok"}
-```
-
-### Insert Record
-```bash
-curl -X POST https://data-ingestion-feature-service.onrender.com/raw \
-  -H "Content-Type: application/json" \
-  -d "{\"invoice_no\":\"9001\",\"stock_code\":\"X001\",\"description\":\"Phase9 test\",\"quantity\":1,\"invoice_date\":\"2026-01-22\",\"price\":99.0,\"customer_id\":123,\"country\":\"IN\"}"
-```
-
-### Retrieve Records
-```bash
-curl https://data-ingestion-feature-service.onrender.com/raw
-```
-Response:
-```json
-[
-  {
-    "invoice_no":"9001",
-    "stock_code":"X001",
-    "description":"Phase9 test",
-    "quantity":1,
-    "invoice_date":"2026-01-22",
-    "price":99.0,
-    "customer_id":123.0,
-    "country":"IN",
-    "id":1
-  },
-  {
-    "invoice_no":"9001",
-    "stock_code":"X001",
-    "description":"Phase9 test",
-    "quantity":1,
-    "invoice_date":"2026-01-22",
-    "price":99.0,
-    "customer_id":123.0,
-    "country":"IN",
-    "id":2
-  }
-]
-```
-
-### Proof
-- ✅ Live URL: [Swagger UI](https://data-ingestion-feature-service.onrender.com/docs)  
-- ✅ Logs in Render dashboard show API requests.  
-- ✅ Database persistence confirmed.  
-```
+---
 
 ## 🛠️ CI/CD, Coverage & Monitoring
 
@@ -301,18 +230,8 @@ Response:
 **Coverage Badge:**
 ![Coverage](https://img.shields.io/codecov/c/github/Jnaneswari19/data-ingestion-feature-service)
 
-**Metrics:**
-- `/metrics` endpoint exposes Prometheus metrics in production.
-- Optional local stack: `docker-compose up prometheus grafana` → Grafana at `http://localhost:3000` (add Prometheus as a data source pointing to `http://prometheus:9090`).
 
-**Verification:**
-```bash
-# CI status
-# Visit GitHub → Actions → confirm green runs
-
-# Metrics endpoint (Render)
-curl https://data-ingestion-feature-service.onrender.com/metrics | head -n 20
-
+---
 
 ### 👩‍💻 Author
 **Jnaneswari**  
