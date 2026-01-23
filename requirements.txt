@@ -1,8 +1,8 @@
-fastapi
-uvicorn[standard]
+fastapi0==.110.0
+uvicorn==0.29.0
 sqlalchemy
 psycopg2-binary
 python-dotenv
-prometheus-fastapi-instrumentator
+prometheus-fastapi-instrumentator==6.7.0
 gunicorn
 httpx
